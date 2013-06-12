@@ -6,8 +6,9 @@ if (is_numeric($event->start_time)) {
 }
 
 $date_bit = event_calendar_get_formatted_date($event->start_date);
+$user = elgg_get_logged_in_user_entity();
 
-if (event_calendar_has_personal_event($event->guid,elgg_get_logged_in_user_guid())) {
+if ($event->isParticipating($user)) {
 	$calendar_bit = 'checked = "checked"';
 } else {
 	$calendar_bit = '';

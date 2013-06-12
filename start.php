@@ -305,11 +305,12 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 		);
 		$return[] = ElggMenuItem::factory($options);
 	}
-	$user_guid = elgg_get_logged_in_user_guid();
-	if ($user_guid) {
-		$calendar_status = event_calendar_personal_can_manage($entity,$user_guid);
+	$user = elgg_get_logged_in_user_entity();
+
+	if ($user) {
+		$calendar_status = event_calendar_personal_can_manage($entity,$user->guid);
 		if ($calendar_status == 'open') {
-			if (event_calendar_has_personal_event($entity->guid,$user_guid)) {
+			if ($entity->isParticipating($user)) {
 				$options = array(
 					'name' => 'personal_calendar',
 					'text' => elgg_echo('event_calendar:remove_from_the_calendar_menu_text'),
@@ -319,7 +320,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 				);
 				$return[] = ElggMenuItem::factory($options);
 			} else {
-				if (!event_calendar_is_full($entity->guid) && !event_calendar_has_collision($entity->guid,$user_guid)) {
+				if (!$entity->isFull() && !event_calendar_has_collision($entity->guid, $user->guid)) {
 					$options = array(
 						'name' => 'personal_calendar',
 						'text' => elgg_echo('event_calendar:add_to_the_calendar_menu_text'),
@@ -330,7 +331,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 					$return[] = ElggMenuItem::factory($options);			}
 			}
 		} else if ($calendar_status == 'closed') {
-			if (!event_calendar_has_personal_event($entity->guid,$user_guid) && !check_entity_relationship($user_guid, 'event_calendar_request', $entity->guid)) {
+			if (!$entity->isParticipating($user) && !check_entity_relationship($user->guid, 'event_calendar_request', $entity->guid)) {
 				$options = array(
 					'name' => 'personal_calendar',
 					'text' => elgg_echo('event_calendar:make_request_title'),
@@ -342,14 +343,15 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 			}		
 		}
 	}
-	
-	$count = event_calendar_get_users_for_event($entity->guid,0,0,true);
+
+	$count = $entity->getParticipants(array('count' => true));
+
 	if ($count == 1) {
 		$calendar_text = elgg_echo('event_calendar:personal_event_calendars_link_one');
 	} else {	
 		$calendar_text = elgg_echo('event_calendar:personal_event_calendars_link',array($count));
 	}
-	
+
 	$options = array(
 		'name' => 'calendar_listing',
 		'text' => $calendar_text,
@@ -358,7 +360,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 		'priority' => 150,
 	);
 	$return[] = ElggMenuItem::factory($options);
-	
+
 	/*if (elgg_is_admin_logged_in() && (elgg_get_plugin_setting('allow_featured', 'event_calendar') == 'yes')) {
 		if ($event->featured) {
 			add_submenu_item(elgg_echo('event_calendar:unfeature'), $CONFIG->url . "action/event_calendar/unfeature?event_id=".$event_id.'&'.event_calendar_security_fields(), 'eventcalendaractions');
@@ -391,11 +393,10 @@ function event_calendar_handle_join($event, $object_type, $object) {
 	elgg_load_library('elgg:event_calendar');
 	$group = $object['group'];
 	$user = $object['user'];
-	$user_guid = $user->getGUID();
+
 	$events = event_calendar_get_events_for_group($group->getGUID());
 	foreach ($events as $event) {
-		$event_id = $event->getGUID();
-		event_calendar_add_personal_event($event_id,$user_guid);
+		$event->addParticipant($user);
 	}
 }
 
@@ -403,11 +404,10 @@ function event_calendar_handle_leave($event, $object_type, $object) {
 	elgg_load_library('elgg:event_calendar');
 	$group = $object['group'];
 	$user = $object['user'];
-	$user_guid = $user->getGUID();
+
 	$events = event_calendar_get_events_for_group($group->getGUID());
 	foreach ($events as $event) {
-		$event_id = $event->getGUID();
-		event_calendar_remove_personal_event($event_id,$user_guid);
+		$event->removeParticipant($user);
 	}
 }
 

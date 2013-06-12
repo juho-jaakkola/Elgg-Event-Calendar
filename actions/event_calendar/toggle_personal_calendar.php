@@ -1,8 +1,12 @@
 <?php
 elgg_load_library('elgg:event_calendar');
-$event_guid = get_input('event_guid',0);
+$event_guid = get_input('event_guid', 0);
 $user_guid = get_input('user_guid',elgg_get_logged_in_user_guid());
-$other = get_input('other','');
+$other = get_input('other', '');
+
+$event = get_entity($event_guid);
+$user = get_user($user_guid);
+
 if ($other) {
 	$remove_response = elgg_echo('event_calendar:added_to_the_calendar');
 	$add_response = elgg_echo('event_calendar:removed_from_the_calendar');
@@ -13,12 +17,13 @@ if ($other) {
 	$add_error = elgg_echo('event_calendar:add_to_my_calendar_error');
 }
 
-if (event_calendar_has_personal_event($event_guid,$user_guid)) {
+if ($event->isParticipating($user)) {
 	$button_text = elgg_echo('event_calendar:add_to_the_calendar');
-	event_calendar_remove_personal_event($event_guid,$user_guid);
+	$event->removeParticipant($user);
+
 	$response = array('success'=>TRUE, 'message' => $remove_response, 'button_text'=>$button_text);
 } else {
-	if (event_calendar_add_personal_event($event_guid,$user_guid)) {
+	if ($event->addParticipant($user)) {
 		$event_calendar_add_users_notify = elgg_get_plugin_setting('add_users_notify', 'event_calendar');
 		if ($event_calendar_add_users_notify == 'yes') {
 			$subject = elgg_echo('event_calendar:add_users_notify:subject');

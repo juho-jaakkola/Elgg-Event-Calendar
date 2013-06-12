@@ -1,10 +1,11 @@
 <?php
 $event = $vars['event'];
-$users = event_calendar_get_users_for_event($event->guid,0);
+$users = $event->getParticipants(array('limit' => false));
 $guids = array();
 foreach($users as $user) {
 	$guids[] = $user->guid;
 }
+
 // TODO: if the event container is a group need to restrict user picker to the members of the group?
 $content = elgg_view('input/userpicker_plus',array('value'=> $guids));
 $content .= '<br /><br />';

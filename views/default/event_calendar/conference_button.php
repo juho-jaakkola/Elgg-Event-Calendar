@@ -8,17 +8,19 @@ $event = $vars['event'];
 
 if ($event) {
 	elgg_load_library('elgg:event_calendar');
-	$user_guid = elgg_get_logged_in_user_guid();
+	$user = elgg_get_logged_in_user_entity();
 	$termination_time = strtotime("1 day",$event->real_end_time);
+
 	if ($termination_time < time()) {
 		$in_time_window = FALSE;
 	} else if ($event->canEdit()) {
 		$in_time_window = TRUE;
-	} else if (event_calendar_has_personal_event($event->guid, $user_guid) && (strtotime('-15 minutes',$event->start_date) <= time())) {
+	} else if ($event->isParticipating($user) && (strtotime('-15 minutes', $event->start_date) <= time())) {
 		$in_time_window = TRUE;
 	} else {
 		$in_time_window = FALSE;
 	}
+
 	if ( $in_time_window ) {
 		$button = elgg_view('output/url', array(
 			'href' => 'action/event_calendar/join_conference?event_guid='.$event->guid,
@@ -27,7 +29,7 @@ if ($event) {
 			'target' => '_blank',
 			'is_action' => TRUE,
 		));
-	
+
 		echo '<div class="event-calendar-conf-join-button">'.$button.'</div>';
 	}
 }

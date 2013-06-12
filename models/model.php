@@ -10,18 +10,6 @@
  *
  */
 
-function event_calendar_get_event_for_edit($event_id) {
-	if ($event_id && $event = get_entity($event_id)) {
-		if ($event->canEdit()) {
-			return $event;
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
-}
-
 // converts to time in minutes since midnight
 function event_calendar_convert_to_time($hour,$minute,$meridian) {
 	if ($meridian) {
@@ -197,10 +185,10 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 				foreach($addusers as $adduser) {
 					if ($adduser) {
 						$user = autocomplete_member_to_user($adduser);
-						$user_id = $user->guid;
-						event_calendar_add_personal_event($event->guid,$user_id);
+						$event->addParticipant($user);
+
 						if (elgg_get_plugin_setting('add_users_notify', 'event_calendar') == 'yes') {
-							notify_user($user_id, $CONFIG->site->guid, elgg_echo('event_calendar:add_users_notify:subject'),
+							notify_user($user->guid, $CONFIG->site->guid, elgg_echo('event_calendar:add_users_notify:subject'),
 								sprintf(
 									elgg_echo('event_calendar:add_users_notify:body'),
 									$user->name,
@@ -239,12 +227,15 @@ function event_calendar_get_events_between($start_date,$end_date,$is_count=FALSE
 
 function event_calendar_merge_repeating_events($events, $repeating_events) {
 	$non_repeating_events = array();
-	foreach($events as $e) {
+	foreach ($events as $e) {
 		if ($e->repeats != 'yes') {
-			$non_repeating_events[] = array('event' => $e,'data' => array(array('start_time' => $e->start_date, 'end_time' => $e->real_end_time)));
+			$non_repeating_events[] = array('event' => $e,'data' => array(array(
+				'start_time' => $e->start_date,
+				'end_time' => $e->real_end_time
+			)));
 		}
 	}
-	
+
 	return array_merge($non_repeating_events, $repeating_events);
 }
 
@@ -1018,51 +1009,12 @@ $count = false, $region='-', $meta_max = '', $annotation_name = '')
 	return false;
 }
 
-function event_calendar_has_personal_event($event_guid,$user_guid) {
-	// check legacy implementation and new one
-	if (check_entity_relationship($user_guid,'personal_event',$event_guid)) {
-		return TRUE;
-	} else {
-		// use old method for now
-		$options = array('guid'=>$event_guid,'annotation_name' => 'personal_event', 'annotation_value' => $user_guid,'count'=>TRUE);
-		//$annotations = 	get_annotations($event_guid, "object", "event_calendar", "personal_event", (int) $user_guid, $user_guid);
-		if (elgg_get_annotations($options)) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
-}
-
-function event_calendar_add_personal_event($event_guid,$user_guid) {
-	if ($event_guid && $user_guid) {
-		if (!event_calendar_has_personal_event($event_guid,$user_guid)
-		&& !event_calendar_has_collision($event_guid,$user_guid)) {
-			if (!event_calendar_is_full($event_guid)) {
-				add_entity_relationship($user_guid,'personal_event',$event_guid);
-				return TRUE;
-			}
-		}
-	}
-	return FALSE;
-}
-
-function event_calendar_add_personal_events_from_group($event_guid,$group_guid) {
+function event_calendar_add_personal_events_from_group($event_guid, $group_guid) {
+	$event = get_entity($event_guid);
 	$members = get_group_members($group_guid, 100000);
-	foreach($members as $member) {
-		$member_id = $member->getGUID();
-		event_calendar_add_personal_event($event_guid,$member_id);
-	}
-}
 
-function event_calendar_remove_personal_event($event_guid,$user_guid) {
-	remove_entity_relationship($user_guid,'personal_event',$event_guid);
-	// also use old method for now
-	$annotations = 	get_annotations($event_guid, "object", "event_calendar", "personal_event", (int) $user_guid, $user_guid);
-	if ($annotations) {
-		foreach ($annotations as $annotation) {
-			$annotation->delete();
-		}
+	foreach($members as $member) {
+		$event->addParticipant($member);
 	}
 }
 
@@ -1102,49 +1054,7 @@ function event_calendar_get_personal_events_for_user($user_guid,$limit) {
 
 // the old way used annotations, and the new Elgg 1.8 way uses relationships
 // for now this version attempts to bridge the gap by using both methods for older sites
-
-function event_calendar_get_users_for_event($event_guid,$limit,$offset=0,$is_count=FALSE) {
-	$options = array(
-		'type' => 'user',
-		'relationship' => 'personal_event',
-		'relationship_guid' => $event_guid,
-		'inverse_relationship' => TRUE,
-		'limit' => 0,
-	);
-	if ($is_count) {
-		//$count_old_way = count_annotations($event_guid, "object", "event_calendar", "personal_event");
-		$count_old_way = elgg_get_annotations(array(
-			'guid'=>$event_guid, 
-			'type'=>"object", 
-			'subtype'=>"event_calendar", 
-			'annotation_name' => "personal_event",
-			'count'=>TRUE)
-		);
-		$options ['count'] = TRUE;
-		$count_new_way = elgg_get_entities_from_relationship($options);
-		return $count_old_way + $count_new_way;
-	} else {
-		$users_old_way = array();
-		//$annotations = get_annotations($event_id, "object", "event_calendar", "personal_event", "", 0, $limit, $offset);
-		$annotations = elgg_get_annotations(array(
-			'guid'=>$event_guid, 
-			'type'=>"object", 
-			'subtype'=>"event_calendar", 
-			'annotation_name' => "personal_event",
-			'limit' => $limit,
-			'offset' => $offset)
-		);
-		if ($annotations) {
-			foreach($annotations as $annotation) {
-				if (($user = get_entity($annotation->value)) && ($user instanceOf ElggUser)) {
-					$users_old_way[] = $user;
-				}
-			}
-		}
-		$users_new_way = elgg_get_entities_from_relationship($options);
-		return array_merge($users_old_way,$users_new_way);
-	}
-}
+// TODO Upgrade the old data to the new model
 
 function event_calendar_security_fields() {
 	$ts = time();
@@ -1207,28 +1117,6 @@ function event_calendar_activated_for_group($group) {
 	return false;
 }
 
-function event_calendar_get_region($event) {
-	$event_calendar_region_list_handles = elgg_get_plugin_setting('region_list_handles', 'event_calendar');
-	$region = trim($event->region);
-	if ($event_calendar_region_list_handles == 'yes') {
-		$region = elgg_echo('event_calendar:region:'.$region);
-	}
-	return htmlspecialchars($region);
-}
-
-function event_calendar_get_type($event) {
-	$event_calendar_type_list_handles = elgg_get_plugin_setting('type_list_handles', 'event_calendar');
-	$type = trim($event->event_type);
-	if ($type) {
-		if ($event_calendar_type_list_handles == 'yes') {
-			$type = elgg_echo('event_calendar:type:'.$type);
-		}
-		return htmlspecialchars($type);
-	} else {
-		return $type;
-	}	
-}
-
 function event_calendar_get_formatted_full_items($event) {
 	$time_bit = event_calendar_get_formatted_time($event);
 	$event_calendar_region_display = elgg_get_plugin_setting('region_display', 'event_calendar');
@@ -1247,15 +1135,15 @@ function event_calendar_get_formatted_full_items($event) {
 	if ($event_calendar_region_display == 'yes') {
 		$item = new stdClass();
 		$item->title = elgg_echo('event_calendar:region_label');
-		$item->value = event_calendar_get_region($event);
+		$item->value = $event->getRegion();
 		$event_items[] = $item;
 	}
 	if ($event_calendar_type_display == 'yes') {
-		$event_type = event_calendar_get_type($event);
+		$event_type = $event->getEventType();
 		if ($event_type) {
 			$item = new stdClass();
 			$item->title = elgg_echo('event_calendar:type_label');
-			$item->value = event_calendar_get_type($event);
+			$item->value = $event_type;
 			$event_items[] = $item;
 		}
 	}
@@ -1325,32 +1213,18 @@ function event_calendar_get_formatted_date($ts) {
 	return date('j/n/Y',$ts);
 }
 
-function event_calendar_is_full($event_id) {
-	$event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
-	if ($event_calendar_spots_display == 'yes') {
-		$count = event_calendar_get_users_for_event($event_id,0,0,TRUE);
-		$event = get_entity($event_id);
-		if ($event) {
-			$spots = $event->spots;
-			if (is_numeric($spots)) {
-				if ($count >= $spots) {
-					return TRUE;
-				}
-			}
-		}
-	}
-	return FALSE;
-}
-
 function event_calendar_has_collision($event_id, $user_id) {
 	$no_collisions = elgg_get_plugin_setting('no_collisions', 'event_calendar');
+
 	if ($no_collisions == 'yes') {
 		$event = get_entity($event_id);
+
 		if ($event) {
 			$start_time = $event->start_date;
-			$end_time = event_calendar_get_end_time($event);
-			// look to see if the user already has events within this period
-			$count = event_calendar_get_events_for_user_between2($start_time,$end_time,TRUE,10,0,$user_id);
+			$end_time = $event->$event->getEndTime();
+
+			// Look to see if the user already has events within this period
+			$count = event_calendar_get_events_for_user_between2($start_time, $end_time, TRUE, 10, 0, $user_id);
 			if ($count > 0) {
 				return TRUE;
 			} else {
@@ -1362,15 +1236,19 @@ function event_calendar_has_collision($event_id, $user_id) {
 	return FALSE;
 }
 
-// this complicated bit of code determines the event end time
+/**
+ * This complicated bit of code determines the event end time
+ */
 function event_calendar_get_end_time($event) {
 	$default_length = elgg_get_plugin_setting('collision_length', 'event_calendar');
+
 	$start_time = $event->start_date;
 	$end_time = $event->end_time;
 	$end_date = $event->end_date;
-	if($end_date) {
+
+	if ($end_date) {
 		if ($end_time) {
-			$end_time = $end_date+$end_time*60;
+			$end_time = $end_date + $end_time * 60;
 		} else if ($start_time == $end_date) {
 			if (is_numeric($default_length)) {
 				$end_time = $end_date + $default_length;
@@ -1384,9 +1262,9 @@ function event_calendar_get_end_time($event) {
 	} else {
 		if ($end_time) {
 			if ($event->start_time) {
-				$end_time = $start_time + ($end_time*60 - $event->start_time*60);
+				$end_time = $start_time + ($end_time * 60 - $event->start_time * 60);
 			} else {
-				$end_time = $start_time + $end_time*60;
+				$end_time = $start_time + $end_time * 60;
 			}
 		} else {
 			if (is_numeric($default_length)) {
@@ -1429,41 +1307,31 @@ function event_calendar_view_entity_list($entities, $count, $offset, $limit, $fu
 	return $html;
 }
 
-// returns open, closed or private for the given event and user
-function event_calendar_personal_can_manage($event,$user_id) {
-	$status = 'private';
-	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
-	if (!$event_calendar_personal_manage 
-		|| $event_calendar_personal_manage == 'open' 
-		|| $event_calendar_personal_manage == 'yes'
-		|| (($event_calendar_personal_manage == 'by_event' && (!$event->personal_manage || ($event->personal_manage == 'open'))))) {
-		$status = 'open';
-	} else {
-		// in this case only admins or event owners can manage events on their personal calendars
-		if(elgg_is_admin_logged_in()) {
-			$status = 'open';
-		} else if ($event && ($event->owner_guid == $user_id)) {
-			$status = 'open';
-		} else if (($event_calendar_personal_manage == 'closed') 
-			|| ($event_calendar_personal_manage == 'no')
-			|| (($event_calendar_personal_manage == 'by_event') && ($event->personal_manage == 'closed'))) {
-			$status = 'closed';
-		}
-	}
+/**
+ * Returns 'open', 'closed' or 'private' for the given event and user
+ */
+function event_calendar_personal_can_manage($event, $user_id) {
+	$user_id = get_user($user_id);
 
-	return $status;
+	return $event->canManage($user);
 }
 
-function event_calendar_send_event_request($event,$user_guid) {
+function event_calendar_send_event_request($event, $user_guid) {
 	$result = FALSE;
-	if(add_entity_relationship($user_guid, 'event_calendar_request', $event->guid)) {
+
+	// TODO Add method EventCalendar::requestUser() ?
+	$result = add_entity_relationship($user_guid, 'event_calendar_request', $event->guid);
+
+	if ($result) {
 		$subject = elgg_echo('event_calendar:request_subject');
 		$name = get_entity($user_guid)->name;
+
 		$title = $event->title;
 		$url = $event->getUrl();
 		$link = elgg_get_site_url().'event_calendar/review_requests/'.$event->guid;
 		$message = sprintf(elgg_echo('event_calendar:request_message'),$name,$title,$url,$link);
-		notify_user($event->owner_guid,elgg_get_site_entity()->guid,$subject,$message);
+
+		notify_user($event->owner_guid, elgg_get_site_entity()->guid, $subject, $message);
 		$result = TRUE;
 	}
 	return $result;
@@ -1818,21 +1686,23 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 		$events = event_calendar_get_events_for_user_between2($start_ts,$end_ts,false,$limit,$offset,$user_guid,$container_guid,$region);
 	}
 
+	elgg_set_ignore_access($access_status);
+
 	$vars = array(
-				'original_start_date' => $original_start_date,
-				'start_date'	=> $start_date,
-				'end_date'		=> $end_date,
-				'first_date'	=> $event_calendar_first_date,
-				'last_date'		=> $event_calendar_last_date,
-				'mode'			=> $mode,
-				'events'		=> $events,
-				'count'			=> $count,
-				'offset'		=> $offset,
-				'limit'			=> $limit,
-				'group_guid'	=> $group_guid,
-				'filter'		=> $filter,
-				'region'		=> $region,
-				'listing_format' => $event_calendar_listing_format,
+		'original_start_date' => $original_start_date,
+		'start_date' => $start_date,
+		'end_date' => $end_date,
+		'first_date' => $event_calendar_first_date,
+		'last_date' => $event_calendar_last_date,
+		'mode' => $mode,
+		'events' => $events,
+		'count' => $count,
+		'offset' => $offset,
+		'limit' => $limit,
+		'group_guid' => $group_guid,
+		'filter' => $filter,
+		'region' => $region,
+		'listing_format' => $event_calendar_listing_format,
 	);
 
 	$content = elgg_view('event_calendar/show_events', $vars);
@@ -1852,8 +1722,12 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 		$title = elgg_echo('event_calendar:listing_title:'.$filter). ' ('.$subtitle.')';
 	}
 
-	$params = array('title' => $title, 'content' => $content, 'filter_override'=>$filter_override);
-	elgg_set_ignore_access($access_status);
+	$params = array(
+		'title' => $title,
+		'content' => $content,
+		'filter_override' => $filter_override
+	);
+
 	return $params;
 }
 
@@ -1887,14 +1761,18 @@ function event_calendar_get_page_content_view($event_guid,$light_box = FALSE) {
 			$content .= elgg_view_comments($event);
 		}
 	}
-	
+
 	if ($light_box) {
 		return '<div class="event-calendar-lightbox">'.elgg_view_title($title).$content.'</div>';
 	} else {
-		$params = array('title' => $title, 'content' => $content,'filter' => '');
-	
+		$params = array(
+			'title' => $title,
+			'content' => $content,
+			'filter' => ''
+		);
+
 		$body = elgg_view_layout("content", $params);
-	
+
 		return elgg_view_page($title,$body);
 	}
 }
@@ -1919,19 +1797,28 @@ function event_calendar_get_page_content_display_users($event_guid) {
 		}
 		elgg_push_breadcrumb($event->title,$event->getURL());
 		elgg_push_breadcrumb(elgg_echo('event_calendar:users_for_event_breadcrumb'));
-		$limit = 12;
+
 		$offset = get_input('offset', 0);
-		$users = event_calendar_get_users_for_event($event_guid,$limit,$offset,false);
+		$users = $event->getParticipants(array(
+			'limit' => 12,
+			'offset' => $offset,
+		));
+
 		$options = array(
 			'full_view' => FALSE,
 			'list_type_toggle' => FALSE,
-			'limit'=>$limit,
-			'event_calendar_event'=>$event,
+			'limit' => $limit,
+			'event_calendar_event' => $event,
 		);
+
 		elgg_extend_view('user/default','event_calendar/calendar_toggle');
-		$content = elgg_view_entity_list($users,$options);
+		$content = elgg_view_entity_list($users, $options);
 	}
-	$params = array('title' => $title, 'content' => $content,'filter' => '');
+	$params = array(
+		'title' => $title,
+		'content' => $content,
+		'filter' => ''
+	);
 
 	$body = elgg_view_layout("content", $params);
 
@@ -1947,7 +1834,7 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 	$event = get_entity($event_guid);
 	$limit = 10;
 	$offset = get_input('offset', 0);
-	
+
 	$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
 	if ($event_calendar_add_users != 'yes') {
 		register_error(elgg_echo('event_calendar:feature_not_activated'));
@@ -1985,11 +1872,11 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 				$options = array(
 					'full_view' => FALSE,
 					'list_type_toggle' => FALSE,
-					'limit'=>$limit,
-					'event_calendar_event'=>$event,
+					'limit' => $limit,
+					'event_calendar_event' => $event,
 					'pagination' => TRUE,
-					'count'=>$count,
-				);				
+					'count' => $count,
+				);
 				$content .= elgg_view_entity_list($users,$options,$offset,$limit);
 			} else {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
@@ -2003,11 +1890,16 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 			$content = elgg_echo('event_calendar:manage_users:unauthorized');
 		}
 	}
-	$params = array('title' => $title, 'content' => $content,'filter' => '');
+
+	$params = array(
+		'title' => $title,
+		'content' => $content,
+		'filter' => ''
+	);
 
 	$body = elgg_view_layout("content", $params);
 
-	return elgg_view_page($title,$body);
+	return elgg_view_page($title, $body);
 }
 
 function event_calendar_get_page_content_review_requests($event_guid) {
@@ -2031,13 +1923,13 @@ function event_calendar_get_page_content_review_requests($event_guid) {
 		elgg_push_breadcrumb(elgg_echo('event_calendar:review_requests_menu_title'));
 
 		if ($event->canEdit()) {
-			$requests = elgg_get_entities_from_relationship(
-			array(
-					'relationship' => 'event_calendar_request', 
-					'relationship_guid' => $event_guid, 
-					'inverse_relationship' => TRUE, 
-					'limit' => 0)
-			);
+			$requests = elgg_get_entities_from_relationship(array(
+				'relationship' => 'event_calendar_request',
+				'relationship_guid' => $event_guid,
+				'inverse_relationship' => TRUE,
+				'limit' => 0
+			));
+
 			if ($requests) {
 				$content = elgg_view('event_calendar/review_requests',array('requests' => $requests, 'entity' => $event));
 			} else {
@@ -2047,11 +1939,15 @@ function event_calendar_get_page_content_review_requests($event_guid) {
 			$content = elgg_echo('event_calendar:review_requests_error');
 		}
 	}
-	$params = array('title' => $title, 'content' => $content,'filter' => '');
+	$params = array(
+		'title' => $title,
+		'content' => $content,
+		'filter' => ''
+	);
 
 	$body = elgg_view_layout("content", $params);
 
-	return elgg_view_page($title,$body);
+	return elgg_view_page($title, $body);
 }
 
 function event_calendar_handle_menu($event_guid) {
@@ -2286,12 +2182,12 @@ function event_calendar_repeat_reminder_logged($e,$start) {
 
 function event_calendar_queue_reminder($e) {
 	elgg_load_library('elgg:message_queue');
-	$subject = elgg_echo('event_calendar:reminder:subject',array($e->title));
+	$subject = elgg_echo('event_calendar:reminder:subject',array($event->title));
 	$time_string = event_calendar_get_formatted_time($e);
-	$body = elgg_echo('event_calendar:reminder:body',array($e->title,$time_string,$e->getURL()));
+	$body = elgg_echo('event_calendar:reminder:body',array($event->title,$time_string,$event->getURL()));
 	$m = message_queue_create_message($subject,$body);
 	if ($m) {
-		$users = event_calendar_get_users_for_event($e->guid,0);
+		$users = $event->getParticipants(array('limit' => false));
 		foreach($users as $u) {
 			message_queue_add($m->guid,$u->guid);
 		}
@@ -2347,7 +2243,7 @@ function event_calendar_queue_reminder($e) {
 }*/
 
 // utility function for BBB api calls
-function event_calendar_bbb_api($api_function,$params=NULL) {
+function event_calendar_bbb_api($api_function, $params = NULL) {
 	
 	$bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt','event_calendar');
 	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';

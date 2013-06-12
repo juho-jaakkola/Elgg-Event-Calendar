@@ -3,10 +3,11 @@ elgg_load_library('elgg:event_calendar');
 $event_guid = get_input("event_guid",0);
 $event = get_entity($event_guid);
 $group = get_entity($event->container_guid);
-if (elgg_instanceof($group,'group') && elgg_instanceof($event,'object','event_calendar') && $group->canEdit()) {
+
+if (elgg_instanceof($group, 'group') && elgg_instanceof($event, 'object', 'event_calendar') && $group->canEdit()) {
 	$members = $group->getMembers(0,0);
-	foreach($members as $member) {
-		event_calendar_add_personal_event($event->guid,$member->guid);
+	foreach ($members as $member) {
+		$event->addParticipant($member);
 	}
 	system_message(elgg_echo('event_calendar:add_to_group_members:success'));
 } else {
