@@ -48,13 +48,13 @@ var defaults = {
 	// time formats
 	titleFormat: {
 		month: 'MMMM yyyy',
-		week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
-		day: 'dddd, MMM d, yyyy'
+		week: "d[.M][.yyyy]{ '&#8212;' d.M.yyyy}",
+		day: 'dddd d.M.yyyy'
 	},
 	columnFormat: {
 		month: 'ddd',
-		week: 'ddd M/d',
-		day: 'dddd M/d'
+		week: 'ddd d.M',
+		day: 'dddd d.M'
 	},
 	timeFormat: { // for event elements
 		'': 'h(:mm)t' // default
@@ -62,20 +62,20 @@ var defaults = {
 	
 	// locale
 	isRTL: false,
-	firstDay: 0,
-	monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-	monthNamesShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-	dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-	dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+	firstDay: 1,
+	monthNames: ['Tammikuu','Helmikuu','Maaliskuu','Huhtikuu','Toukokuu','Kesäkuu','Heinäkuu','Elokuu','Syyskuu','Lokakuu','Marraskuu','Joulukuu'],
+	monthNamesShort: ['Tammi','Helmi','Maalis','Huhti','Touko','Kesä','Heinä','Elo','Syys','Loka','Marras','Joulu'],
+	dayNames: ['Sunnuntai','Maanantai','Tiistai','Keskiviikko','Torstai','Perjantai','Lauantai'],
+	dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','La'],
 	buttonText: {
 		prev: '&nbsp;&#9668;&nbsp;',
 		next: '&nbsp;&#9658;&nbsp;',
 		prevYear: '&nbsp;&lt;&lt;&nbsp;',
 		nextYear: '&nbsp;&gt;&gt;&nbsp;',
-		today: 'today',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		today: 'tänään',
+		month: 'kuukausi',
+		week: 'viikko',
+		day: 'päivä'
 	},
 	
 	// jquery-ui theming
@@ -2804,7 +2804,7 @@ function AgendaDayView(element, calendar) {
 
 setDefaults({
 	allDaySlot: true,
-	allDayText: 'all-day',
+	allDayText: 'koko päivä',
 	firstHour: 6,
 	slotMinutes: 30,
 	defaultEventMinutes: 120,
