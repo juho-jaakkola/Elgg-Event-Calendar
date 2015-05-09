@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+return array (
 	
 	'item:object:event_calendar' => "Calendario",
 	'tag_names:event_tags' => "Etiquetas",
@@ -147,8 +147,8 @@ $language = array(
 
 Se ha añadido un evento de \"%s\"  a tu calendario personal.",
 
-	'event_calendar:settings:region_list_handles:title' => "The region strings above are string handles. Utilice el sistema de traducción Elgg para resolverlos.",
-	'event_calendar:settings:type_list_handles:title' => "The type strings above are string handles. Use el sistema de traducción de Elgg para resolverlos.",
+	'event_calendar:settings:region_list_handles:title' => "Las regiones del cuadro de arriba son cadenas manejadas por el sistema de localización. Utilice el sistema de traducción Elgg para resolverlos.",
+	'event_calendar:settings:type_list_handles:title' => "Las regiones del cuadro de arriba son cadenas manejadas por el sistema de localización. Utilice el sistema de traducción de Elgg para resolverlos.",
 		
 	'event_calendar:settings:personal_manage:title' => "Permisos del calendario",
 	'event_calendar:settings:personal_manage:description' => "Determina cuando una persona puede agregar eventos a sus calendarios personales (abierto), necesitan solicitar acceso (cerrado), no tiene ninguna opción en todo (privado), o permitir que los creadores de eventos puedan determinarlo para cada evento (por evento). Tenga en cuenta que si establece este como privado probablemente debería activar la opción anterior para permitir a los creadores de eventos y los administradores del sitio puedan agregar sus acontecimientos a otros calendarios personales.",
@@ -352,4 +352,3 @@ Usted puede visitar la página del evento aquí: ⏎
 
 );
 					
-add_translation(basename(__FILE__, '.php'), $language);

@@ -1,6 +1,6 @@
 <?php
 
-$language = array(
+return array (
 	'item:object:event_calendar' => "イベントカレンダー",
 	'tag_names:event_tags' => "タグ",
 	'event_calendar:optional' => "任意。",
@@ -366,5 +366,3 @@ You can visit the event page here:
 	'event_calendar:notify:summary' => 'New event: %s',
 
 );
-
-add_translation(basename(__FILE__, '.php'), $language);
