@@ -15,7 +15,7 @@ return array (
 	"event_calendar:start_date_label" => "Fecha de comienzo",
 	"event_calendar:start_date_description"	=> "¿Cuándo comienza el evento?",
 	"event_calendar:fees_label" => "Coste",
-	"event_calendar:fees_description"	=> " Si aplica, ¿cuánto cuesta el evento?",
+	"event_calendar:fees_description"	=> "Si aplica, ¿cuánto cuesta el evento?",
 	"event_calendar:contact_label" => "Contacto",
 	"event_calendar:contact_description"	=> "La persona a contactar para obtener más información; generalmente se utiliza un número de teléfono o una dirección de correo.",
 	"event_calendar:organiser_label" => "Organizador",
@@ -25,7 +25,8 @@ return array (
 	"event_calendar:long_description_label" => "Descripción detallada",
 	"event_calendar:long_description_description"	=> "Puede ser un párrafo o más si es necesario.",
 	"event_calendar:manage_event_response" => "El evento ha sido guardado.",
-	"event_calendar:manage_event_error" => "Error: Ha ocurrido un error al salvar el evento. Revisa que hayas introducido los campos obligatorios.",
+	'event_calendar:add_event_response' => "Tu evento ha sido agregado.",
+	"event_calendar:manage_event_error" => "Error: Ha ocurrido un error al agregar el evento. Revisa que hayas introducido los campos obligatorios.",
 	"event_calendar:error_nosuchevent" => "Error: no existe ese evento.",
 	"event_calendar:day_label" => "Día",
 	"event_calendar:week_label" => "Semana",
@@ -39,7 +40,7 @@ return array (
 	"event_calendar:widget_title" => "Calendario",
 	"event_calendar:widget:description" => "Mostrar tus eventos.",
 	"event_calendar:num_display" => "Número de eventos a mostrar",
-	"event_calendar:when_label" => "Cuando",
+	"event_calendar:when_label" => "Cuándo",
 	"event_calendar:delete_response" => "El evento ha sido borrado.",
 	"event_calendar:error_delete" => "El evento no existe o no tienes permisos para borrarlo.",
 	"event_calendar:delete_cancel_response" => "Cancelado el borrado del evento.",
@@ -56,11 +57,9 @@ return array (
 	"event_calendar:added_to_the_calendar" => "Añadir al calendario",
 	"event_calendar:removed_from_the_calendar" => "Remover calendario",
 	"event_calendar:add_to_the_calendar_error" => "No se puede añadir ese evento a tu calendario personal. (Quizás tu calendario ya esté lleno o ¿intentas agendar dos eventos a la vez en tu calendario personal?)",
-	"event_calendar:upgrade:success" => "Upgrade of Event Calendar was successful.",
-	"event_calendar:upgrade:no_updates" => "No upgrade required.",
+	"event_calendar:upgrade:success" => "La actualización de Event Calendar fue exitosa.",
+	"event_calendar:upgrade:no_updates" => "No hay actualizaciones.",
 	"event_calendar:admin_notice_pending_upgrades" => "Hay actualizaciones pendientes para el plugin Event Calendar. Por favor ve <a href=\"%s\">a la configuración del plugin</a> para ejecutar las actualizaciones pendientes.",
-
-	"event_calendar:admin_notice_pending_upgrades" => "There are pending upgrades for the Event Calendar plugin. Please go to the <a href=\"%s\">Event Calendar plugin settings</a> page to run the pending upgrades.",
 	"event_calendar:users_for_event_menu_title" => "Miembros que incluyen este evento en su calendario personal",
 	"event_calendar:users_for_event_title" => "Miembros interesadxs en el evento \"%s\"",
 	"event_calendar:personal_event_calendars_link" => "Miembros interesadxs en este evento (%s)",
@@ -71,17 +70,17 @@ return array (
 	"event_calendar:settings:autopersonal:title" => "A&ntilde;adir eventos de forma autom&aacute;tica cuando un usuario crea su calendario personal.",
 	"event_calendar:settings:autogroup:title" => "A&ntilde;adir autom&aacute;ticamente los eventos de grupo en los calendarios personales de todos los miembros que lo componen.",
 	"event_calendar:settings:venue_view:title" => "Mostrar localizaci&oacute;n en la vista del resumen (listado de eventos)",
-	"event_calendar:settings:yes" => "si",
-	"event_calendar:settings:no" => "no",
+	"event_calendar:settings:yes" => "Si",
+	"event_calendar:settings:no" => "No",
 	"event_calendar:settings:site_calendar:title" => "¿Habilitar calendario para todo el sitio?",
-	"event_calendar:settings:site_calendar:admin" => "si, solamente lxs administradorxs pueden subir eventos",
-	"event_calendar:settings:site_calendar:loggedin" => "si, cualquier miembro logueado puede subir eventos",	
+	"event_calendar:settings:site_calendar:admin" => "Si, solamente lxs administradorxs pueden subir eventos",
+	"event_calendar:settings:site_calendar:loggedin" => "Si, cualquier miembro logueadx puede subir eventos",	
 	"event_calendar:settings:group_calendar:title" => "¿Habilitar calendario para los grupos?",
-	"event_calendar:settings:group_calendar:admin" => "si, solamente lxs administradorxs y creadorxs del grupo puede subir eventos",
-	"event_calendar:settings:group_calendar:members" => "si, cualquier miembro del grupo puede subir eventos",
+	"event_calendar:settings:group_calendar:admin" => "Si, solamente lxs administradorxs y creadorxs del grupo puede subir eventos",
+	"event_calendar:settings:group_calendar:members" => "Si, cualquier miembro del grupo puede subir eventos",
 	"event_calendar:settings:group_default:title" => "Lo grupos nuevos deber&iacute;n tener un calendario por defecto (si el plugin de calendarios se encuentra activado)",
-	"event_calendar:settings:group_default:no" => "no (pero los admins o los creadores del grupo pueden activar el calendario si lo desean)",
-	"event_calendar:settings:group_default:yes" => "si (pero los admins o los creadores del grupo puede desactivar el calendario si lo desean)",
+	"event_calendar:settings:group_default:no" => "No (pero los admins o los creadores del grupo pueden activar el calendario si lo desean)",
+	"event_calendar:settings:group_default:yes" => "Si (pero los admins o los creadores del grupo puede desactivar el calendario si lo desean)",
 	"event_calendar:settings:group_always_display:title" => "Si el calendario del grupo se encuentra activado, mostrarlo siempre (salvo cuando se encuentra vacio)",
 	"event_calendar:settings:region_display:title" => "A&ntilde;adir el campo Regi&oacute;n a los eventoss",
 	"event_calendar:settings:region_list:title" => "Listado de regiones (una por l&iacute;nea)",
@@ -89,7 +88,7 @@ return array (
 	"event_calendar:region_description" => "Opcional. Selecciona la regi&oacute;n donde tendr&aacute; lugar el evento.",
 	"event_calendar:settings:type_display:title" => "¿Agregar \"tipo de eventos\" a los eventos?",
 	"event_calendar:settings:type_list:title" => "Lista de tipos de eventos (uno por línea)",
-	"event_calendar:settings:type_list:desc" => "(puedes asociarcada tipo con un valor de color en hexadecimal el cual será usado como fondo en la vista completa del calendario. El tipo y el código de color se separan con una pleca (|).Ejemplo: 'meeting|#00CC33')",
+	"event_calendar:settings:type_list:desc" => "(puedes asociar cada tipo con un valor de color en hexadecimal el cual será usado como fondo en la vista completa del calendario. El tipo y el código de color se separan con una pleca (|).Ejemplo: 'meeting|#00CC33')",
 	"event_calendar:type_label" => "Tipo de eventos",
 	"event_calendar:type_description" => "Seleccione un tipo de evento.",
 	"event_calendar:all" => "Todos",
@@ -130,16 +129,16 @@ Se ha añadido un evento de \"%s\"  a tu calendario personal.",
 	"event_calendar:settings:personal_manage:description" => "Determina cuando una persona puede agregar eventos a sus calendarios personales (abierto), necesitan solicitar acceso (cerrado), no tiene ninguna opción en todo (privado), o permitir que los creadores de eventos puedan determinarlo para cada evento (por evento). Tenga en cuenta que si establece este como privado probablemente debería activar la opción anterior para permitir a los creadores de eventos y los administradores del sitio puedan agregar sus acontecimientos a otros calendarios personales.",
 	"event_calendar:request_event_response" => "Tu petición para añadir ese evento ha sido enviada,",
 	"event_calendar:request_event_error" => "Error: Tu petición para añadir el evento al calendario no se ha enviado.",
-	"event_calendar:request_subject" => "Haz recebido una invitación de calendario",
-	"event_calendar:request_message" => "% s ha pedido que el evento \"% s\", aquí: ⏎
-⏎
-% s ⏎
-⏎
-añadido a su calendario personal. ⏎
-⏎
-Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
-⏎
-% s ⏎
+	"event_calendar:request_subject" => "Haz recibido una invitación de calendario",
+	"event_calendar:request_message" => "%s ha pedido que el evento \"%s\", aquí: 
+
+% s 
+
+añadido a su calendario personal. 
+
+Puedes gestionar solicitudes de calendario para este evento aquí: 
+
+% s 
 ",
 		
 	"event_calendar:review_requests_error" => "El evento no existe o no tienes permisos para aprobar la solicitud.",
@@ -158,10 +157,9 @@ Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
 	"event_calendar:review_requests:error:reject" => "Error: No se ha podido rechazar la petición.",
 		
 	"event_calendar:settings:hide_access:title" => "Ocultar acceso al calendario",
-	"event_calendar:settings:default_access:title" => "Si el acceso al evento esta oculto,  ¿cual deberia ser el valor por defecto?",
+	"event_calendar:settings:default_access:title" => "Si el acceso al evento esta oculto,  ¿cuál debería ser el valor por defecto?",
 	"event_calendar:settings:hide_end:title" => "Ocultar campos de fecha y hora",
 	"event_calendar:settings:more_required:title" => "Hacer visible todos los campos excepto si se requiere una larga descripción.",
-		
 	"event_calendar:add_to_group:remove_group_title" => "Remover ese evento del grupo",
 	"event_calendar:add_to_group:remove_group_button" => "Remover del grupo",
 	"event_calendar:remove_from_group:success" => "Evento removido del calendario del grupo",
@@ -173,14 +171,13 @@ Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
 	"event_calendar:generic_error_title" => "Error",
 	"event_calendar:error_event_edit" => "Error: no existe dicho evento o no tienes permisos para editarlo. ",
 	"event_calendar:add" => "Añadir",
-		
-	"feed:ical" => "iCal feed para esta página",
+	"feed:ical" => "iCal para este calendario",
 	"event_calendar:ical_popup_message" => "Puedes usar la siguiente URL para obtener un iCalendar feed para los eventos públicos que se listan en esta página:",
 	"event_calendar:ical_auth_file_name:title" => "Ubicación del archivo de autenticación de iCal en el sistema de archivos local (experimental - no es necesario para feeds públicos)",
-	"event_calendar:owner:permissions_error" => "No ienes permisos para visualizar esa pagina.",
+	"event_calendar:owner:permissions_error" => "No tienes permisos para visualizar esa pagina.",
 	"event_calendar:show_all" => "Muestra todo",
 	"event_calendar:show_open" => "Mostrar abiertos",
-	'event_calendar:listing_title:user' => "Evendos de %s",
+	'event_calendar:listing_title:user' => "Eventos de %s",
 	"event_calendar:show_mine" => "Mi calendario",
 	"event_calendar:show_friends" => "Calendario de mis amigas",
 	'event_calendar:upcoming_events_listing_title:all' => "Próximos eventos",
@@ -189,19 +186,18 @@ Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
 	'event_calendar:upcoming_events_listing_title:friends' => "Próximos eventos de tus amigxs",
 	"event_calendar:listing_title:all" => "Todos los eventos",
 	"event_calendar:listing_title:open" => "Eventos abiertos",
-	"event_calendar:listing_title:friends" => "Calendarios de amigos",	
-	"event_calendar:manage_users:title" => "Organizar suscriptores para \"%s\"",
-	"event_calendar:manage_users:breadcrumb" => "Organizar suscriptores",
+	"event_calendar:listing_title:friends" => "Calendarios de amigxs",	
+	"event_calendar:manage_users:title" => "Organizar suscriptorxs para \"%s\"",
+	"event_calendar:manage_users:breadcrumb" => "Organizar suscriptorxs",
 	"event_calendar:manage_users:description" => "Agregar o remover eventos de calendarios personales.",
 	"event_calendar:manage_users:unauthorized" => "Error: no tienes autorización para organizar calendarios personales para este evento",
 	'event_calander:end_before_start:error' => "Error: el fin del evento debe tener lugar luego de su comienzo.",	
-	"event_calendar:add_to_group_members:success" => "El evento ha sido agregado a tu calendario personal y al de todos los miembros del grupo.",
-	"event_calendar:add_to_group_members:error" => "Error: no se pudo agregar este evento a los calendarios personales de los miembros del grupo.",
+	"event_calendar:add_to_group_members:success" => "El evento ha sido agregado a tu calendario personal y al de todos lxs miembros del grupo.",
+	"event_calendar:add_to_group_members:error" => "Error: no se pudo agregar este evento a los calendarios personales de lxs miembros del grupo.",
 	"event_calendar:remove_from_group_members:success" => "El evento ha sido borrado de tu calendario personal y de todos los miembros del grupo.",
 	"event_calendar:remove_from_group_members:error" => "Error: no se pudo eliminar este evento de los calendarios personales de los miembros del grupo.",
 	"event_calendar:add_to_group_members:button" => "Agregar a todos",
 	"event_calendar:remove_from_group_members:button" => "Remover de todos",
-		
 	"event_calendar:manage_subscribers:success" => "Calendarios personales actualizados.",
 	"event_calendar:manage_subscribers:error" => "Error: No se pueden actualizar los calendarios personales.",
 	"event_calendar:personal_manage:open" => "abierto",
@@ -212,7 +208,6 @@ Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
 	"event_calendar:personal_manage:by_event:open" => "Abierto. Personas pueden agregar este evento libremente a sus calendarios personales. ",
 	"event_calendar:personal_manage:by_event:closed" => "Cerrado. Personas pueden solicitar agregar este evento a sus calendarios personales. Pueden revisar y aprobar solicitudes.",
 	"event_calendar:personal_manage:by_event:private" => "Privado. Tu u otro administrador de evento deben agregar este evento a calendarios personales. No hay forma que otros usuarios agreguen o soliciten este evento.",
-
 	'event_calendar:all_day_bit' => "(todo el día)",
 	"event_calendar:modify_full_calendar:error" => "Error: no se puede modificar calendario completo",
 	"event_calendar:from_label" => "Desde:",
@@ -275,19 +270,19 @@ Puedes gestionar solicitudes de calendario para este evento aquí: ⏎
 	"event_calendar:settings:repeated_events:title" => "Permitir eventos repetidos (actualmente solo funciona correctamente en modo de calendario completo)",
 	"event_calendar:settings:reminders:title" => "Permitir envío de recordatorios",
 	"event_calendar:reminder:subject" => "Recordatorio para el evento: %s",
-	"event_calendar:reminder:body" => "El evento ⏎
-⏎
-% s ⏎
-⏎
-tiene lugar en ⏎
-⏎
-% s. ⏎
-⇥ ⏎
-Usted puede visitar la página del evento aquí: ⏎
-% s ⏎
+	"event_calendar:reminder:body" => "El evento 
+
+% s 
+
+tiene lugar en 
+
+% s. 
+⇥ 
+Usted puede visitar la página del evento aquí: 
+% s 
 ⇥",
 	"event_calendar:bbb_server_url" => "URL del Servidor Big Blue Button (debe terminar con una barra)",
-	"event_calendar:bbb_security_salt" => "salado de seguridad de Big Blue Button",
+	"event_calendar:bbb_security_salt" => "Salto de seguridad de Big Blue Button",
 	"event_calendar:conference_create_error" => "Error: imposible crear conferencia web.",
 	"event_calendar:couldnotjoin" => "Error: imposible unirse a la conferencia",
 	"event_calendar:join_conf_button" => "Unirse a la conferencia",
