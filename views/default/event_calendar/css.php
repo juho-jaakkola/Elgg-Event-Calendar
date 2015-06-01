@@ -144,11 +144,6 @@ table.event_calendar_paged_table th {
 	padding:3px 3px 3px 3px;
 }
 
-.event-calendar-personal-calendar-toggle-wrapper {
-	width: 100%;
-	margin-bottom: 30px;
-}
-
 .event-calendar-personal-calendar-toggle {
 	float: right;
 }
