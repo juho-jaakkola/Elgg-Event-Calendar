@@ -146,6 +146,9 @@ table.event_calendar_paged_table th {
 
 .event-calendar-personal-calendar-toggle-wrapper {
 	width: 100%;
+	position: relative;
+	top: -10px;
+	left:-10px;
 	margin-bottom: 30px;
 }
 
