@@ -1,5 +1,11 @@
 == Version history ==
 
+=== 1.8.1 (iionly and Juho Jaakola) ===
+
+- If event's long description is available, display it on event full view page
+- Cleanup of entity_list view (no longer use deprecated navigation/viewtype view that were unnecessary to be used anyway)
+- Use elgg_is_active_plugin() instead of elgg_plugin_exists() to make sure the helper plugins are enabled before using them
+
 === 1.8.0 (iionly and Juho Jaakola) ===
 
 - Major code cleanup
@@ -10,13 +16,14 @@
 - Getting sending of reminders (when message_queue plugin is installed) to work on Elgg 1.8
 - Correctly list open events (events with a limited number of spots that still have free spots) on the open events tab
 - Correctly display html editor (Tinymce) for longtext input fields both with the bundled Tinymce editor plugin and a Tinymce plugin that uses version 4.X of the Tinymce editor
+- Correctly display share section when adding/editing an event if the Entity Admins plugin is installed
 - It's now possible to translate the calendar UI (at least the parts allowed to translate by the FullCalendar jQuery plugin)
 - Uses default userpicker instead of custom one
 - Support of index page and group profile page widgets (for use with Widget Manager plugin)
-- Adds Finnish translations
 - Adds German translations
+- Adds Spanish translations (thanks to Yaco)
+- Adds Finnish translations (incomplete)
 - Adds Japanese translations (incomplete)
-- Adds Spanish translations (incomplete)
 - Adds French translations (incomplete)
 
 === 0.85 ===
