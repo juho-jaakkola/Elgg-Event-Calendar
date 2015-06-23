@@ -109,6 +109,7 @@ elgg.event_calendar.handlePagedPersonalCalendarToggle = function() {
 	guid = parseInt($(this).attr('id').substring('event_calendar_paged_checkbox_'.length));
 	elgg.event_calendar.togglePagedPersonalCalendar(guid);
 }
+
 elgg.event_calendar.togglePagedPersonalCalendar = function(guid) {
 	elgg.action('event_calendar/toggle_personal_calendar',
 			{
