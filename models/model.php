@@ -1839,6 +1839,7 @@ function event_calendar_get_page_content_display_users($event_guid) {
 
 		set_input('guid', $event->guid);
 		elgg_extend_view('user/elements/summary', 'event_calendar/calendar_toggle');
+
 		$content = elgg_view_entity_list($users, $options);
 	}
 	$params = array('title' => $title, 'content' => $content,'filter' => '');
@@ -1905,6 +1906,7 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 
 				set_input('guid', $event->guid);
 				elgg_extend_view('user/elements/summary', 'event_calendar/calendar_toggle');
+
 				$options = array(
 					'full_view' => false,
 					'list_type_toggle' => false,
