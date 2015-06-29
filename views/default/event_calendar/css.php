@@ -160,16 +160,6 @@ li.event-calendar-filter-menu-show-only {
 	margin-right: 10px;
 }
 
-.event-calendar-medium-text {
-	width: 500px !important;
-}
-
-.event-calendar-edit-form-block label {
-	float: left;
-	width: 105px;
-	margin-top: 5px;
-}
-
 .event-calendar-edit-form-other-block .mceLayout,
 .event-calendar-edit-form-other-block .mce-tinymce  {
 	float:none;
@@ -235,11 +225,6 @@ li.event-calendar-filter-menu-show-only {
 .event-calendar-repeating-selected:hover {
 	text-decoration: none;
 	color: #CCCCCC;
-}
-
-.event-calendar-edit-form-schedule-block ul.elgg-vertical li {
-	display: block !important;
-	clear: both;
 }
 
 .event-calendar-edit-form-block ul.elgg-vertical li label {
